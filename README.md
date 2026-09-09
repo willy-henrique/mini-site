@@ -28,9 +28,16 @@ Os dados editáveis ficam em `src/data/story.ts`:
 - `partyDate`, `firstMeetingDate` e `firstKissDate`: datas da choppada, do encontro e do primeiro beijo em ISO 8601. O contador usa `firstKissDate` e mantém o offset de Brasília (`-03:00`);
 - `approachLine` e `pickupLine`: a abordagem da fofoca e a cantada original;
 - `firstDateLocation`, `movieName`, `movieDate` e `cinemaName`: local do encontro e informações do cinema;
+- `myWhatsApp`: preenchido pela variável de ambiente `NEXT_PUBLIC_WHATSAPP` (veja abaixo), usada no botão de envio da versão dela;
 - `soundtracks`: título, artista e caminho do áudio de cada momento da história.
 
 Textos narrativos adicionais ficam nos componentes em `src/components/sections`, enquanto cards e capítulos reutilizáveis estão em `src/data/story.ts`. Perguntas do quiz ficam em `src/data/quiz.ts`.
+
+## Número do WhatsApp
+
+O botão "Mandar pro …" da seção "versão dela" usa `NEXT_PUBLIC_WHATSAPP`: DDI + DDD, só dígitos, como em `5562999999999`. Copie `.env.example` para `.env.local` e preencha para rodar local; na Vercel, cadastre a variável em Settings → Environment Variables como **Config** (não Secret).
+
+Por ser `NEXT_PUBLIC_`, o valor é embutido no JavaScript enviado ao navegador — ele não fica no repositório, mas fica visível para quem abrir o site. Sem a variável definida, o botão do WhatsApp some e resta apenas "copiar meu texto".
 
 ## Trocar as fotos
 
@@ -60,7 +67,7 @@ O player nunca começa sozinho. Se `audioUrl` estiver vazio, ele aparece apenas 
 2. Importe o repositório na Vercel como projeto Next.js.
 3. Mantenha o comando de build padrão (`npm run build`).
 
-O site já envia metadata `noindex, nofollow`, não usa analytics e não envia as respostas do quiz nem o texto opcional da versão dela. Esse texto fica somente no `localStorage` do aparelho. Como há fotos pessoais, prefira um repositório privado e considere a proteção por senha da plataforma antes de compartilhar o link.
+O site já envia metadata `noindex, nofollow`, não usa analytics e não tem backend: nada é enviado automaticamente. As respostas do quiz e o texto da versão dela ficam no `localStorage` do aparelho. Depois de guardar o texto, ela escolhe se manda — o botão abre o WhatsApp com a mensagem pronta, ela revisa e aperta enviar; nada sai sem essa ação. Como há fotos pessoais, prefira um repositório privado e considere a proteção por senha da plataforma antes de compartilhar o link.
 
 ## Easter eggs
 

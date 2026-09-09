@@ -12,6 +12,11 @@ export const story = {
   movieName: "Odisseia",
   movieDate: "",
   cinemaName: "Passeio das Águas Shopping",
+  /**
+   * WhatsApp de destino, vindo de NEXT_PUBLIC_WHATSAPP (DDI + DDD, só dígitos).
+   * Sem a variável definida, a seção "versão dela" mostra apenas o botão de copiar.
+   */
+  myWhatsApp: process.env.NEXT_PUBLIC_WHATSAPP ?? "",
   soundtracks: {
     intro: { title: "Abertura", artist: "", audioUrl: "" },
     party: { title: "A choppada", artist: "", audioUrl: "" },
