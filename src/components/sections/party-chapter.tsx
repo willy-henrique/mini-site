@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { ArrowDownRight } from "lucide-react";
-import { useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
+import { useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from "react";
 import { ChapterHeading } from "@/components/ui/chapter-heading";
 import { Reveal } from "@/components/ui/reveal";
 import { SoftButton } from "@/components/ui/soft-button";
@@ -12,11 +12,13 @@ import { story } from "@/data/story";
 import { useReducedMotionSafe } from "@/hooks/use-reduced-motion-safe";
 
 export function PartyChapter() {
-  const sceneRef = useRef<HTMLDivElement>(null);
+  const sceneRef = useRef<HTMLButtonElement>(null);
   const [gaze, setGaze] = useState({ x: 0, y: 0 });
+  const [connected, setConnected] = useState(false);
   const reducedMotion = useReducedMotionSafe();
 
-  const moveGaze = (event: ReactPointerEvent<HTMLDivElement>) => {
+  const moveGaze = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    if (event.pointerType !== "mouse" || connected) return;
     const rect = sceneRef.current?.getBoundingClientRect();
     if (!rect) return;
     setGaze({
@@ -25,7 +27,10 @@ export function PartyChapter() {
     });
   };
 
-  const focusEachOther = () => setGaze({ x: 4, y: 0 });
+  const focusEachOther = () => {
+    setConnected((value) => !value);
+    setGaze({ x: 0, y: 0 });
+  };
 
   return (
     <section id="choppada" className="story-section party-chapter">
@@ -33,24 +38,25 @@ export function PartyChapter() {
         <ChapterHeading number="01" title="A noite em que ninguém teve coragem" description="O flerte estava acontecendo. A iniciativa… nem tanto." />
 
         <Reveal>
-          <div
+          <button
+            type="button"
             ref={sceneRef}
-            className="party-scene"
+            className={`party-scene ${connected ? "is-connected" : ""}`}
             onPointerMove={moveGaze}
-            onPointerDown={focusEachOther}
-            onPointerLeave={() => setGaze({ x: 0, y: 0 })}
-            role="group"
-            aria-label="Uma representação de nós dois trocando olhares em lados opostos da festa"
+            onPointerLeave={() => { if (!connected) setGaze({ x: 0, y: 0 }); }}
+            onClick={focusEachOther}
+            aria-pressed={connected}
+            aria-label={connected ? "Afastar nossas fotos novamente" : "Aproximar nossas fotos na cena da festa"}
           >
             <div className="party-scene__beam party-scene__beam--one" />
             <div className="party-scene__beam party-scene__beam--two" />
             <Person label="Willy" side="left" gaze={gaze} src="/photos/solo-willy.jpeg" alt="Willy na choppada" position="50% 58%" />
             <motion.div className="gaze-line" animate={reducedMotion ? undefined : { opacity: [0.2, 0.8, 0.2] }} transition={{ duration: 2.4, repeat: Infinity }}>
-              <span>olhares suspeitos</span>
+              <span>{connected ? "agora foi" : "olhares suspeitos"}</span>
             </motion.div>
             <Person label="você" side="right" gaze={{ x: -gaze.x, y: gaze.y }} src="/photos/solo-iasmim.jpeg" alt="Iasmim olhando para o espelho" position="50% 37%" />
-            <p className="party-scene__hint">toque ou mova por aqui</p>
-          </div>
+            <p className="party-scene__hint">{connected ? "finalmente mais perto — toque para voltar" : "toque para aproximar"}</p>
+          </button>
         </Reveal>
         <div className="chapter-soundtrack"><MusicCard track={story.soundtracks.party} compact /></div>
 
@@ -75,7 +81,10 @@ export function PartyChapter() {
 
 function Person({ label, side, gaze, src, alt, position }: { label: string; side: "left" | "right"; gaze: { x: number; y: number }; src: string; alt: string; position: string }) {
   return (
-    <div className={`party-person party-person--${side}`} style={{ transform: `translate(${gaze.x * 0.7}px, ${gaze.y * 0.45}px)` }}>
+    <div
+      className={`party-person party-person--${side}`}
+      style={{ "--gaze-x": `${gaze.x * 0.7}px`, "--gaze-y": `${gaze.y * 0.45}px` } as CSSProperties}
+    >
       <div className="party-person__portrait">
         <Image src={src} alt={alt} fill sizes="(max-width: 699px) 120px, 170px" style={{ objectFit: "cover", objectPosition: position }} />
         <div className="party-person__overlay" />

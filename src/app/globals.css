@@ -146,12 +146,14 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
 
 /* Party scene */
 .party-chapter { background: linear-gradient(180deg, #09090b, #0d090c 55%, #100b0d); }
-.party-scene { position: relative; min-height: 370px; overflow: hidden; display: flex; align-items: flex-end; justify-content: space-between; padding: 60px 8% 34px; border: 1px solid var(--line); border-radius: 28px; background: radial-gradient(circle at 50% 20%, rgba(127,29,63,.28), transparent 38%), #0b090b; box-shadow: var(--shadow); touch-action: pan-y; }
+.party-scene { position: relative; width: 100%; min-height: 370px; overflow: hidden; display: flex; align-items: flex-end; justify-content: space-between; padding: 60px 8% 34px; border: 1px solid var(--line); border-radius: 28px; color: inherit; background: radial-gradient(circle at 50% 20%, rgba(127,29,63,.28), transparent 38%), #0b090b; box-shadow: var(--shadow); font: inherit; text-align: inherit; cursor: pointer; touch-action: pan-y; appearance: none; }
 .party-scene::before { content: ""; position: absolute; inset: 0; opacity: .35; background: linear-gradient(115deg, transparent 18%, rgba(216,178,110,.06) 19%, transparent 33%, transparent 67%, rgba(127,29,63,.1) 68%, transparent 82%); }
 .party-scene__beam { position: absolute; top: -40%; width: 90px; height: 150%; opacity: .11; filter: blur(15px); transform-origin: top; }
 .party-scene__beam--one { left: 22%; rotate: 18deg; background: var(--gold); }
 .party-scene__beam--two { right: 19%; rotate: -24deg; background: var(--wine-light); }
-.party-person { position: relative; z-index: 2; width: 118px; display: flex; flex-direction: column; align-items: center; transition: transform 160ms ease-out; will-change: transform; }
+.party-person { position: relative; z-index: 2; width: 118px; display: flex; flex-direction: column; align-items: center; transform: translate(var(--gaze-x), var(--gaze-y)); transition: transform .7s cubic-bezier(.22,1,.36,1); will-change: transform; }
+.party-scene.is-connected .party-person--left { transform: translate(24px, 0) rotate(2deg) scale(1.035); }.party-scene.is-connected .party-person--right { transform: translate(-24px, 0) rotate(-2deg) scale(1.035); }
+.party-scene.is-connected .party-person__portrait { border-color: rgba(212,160,167,.52); box-shadow: 0 20px 58px rgba(0,0,0,.45), 0 0 38px rgba(127,29,63,.25); }
 .party-person__portrait { position: relative; width: 112px; aspect-ratio: .74; overflow: hidden; border: 1px solid rgba(255,255,255,.22); border-radius: 55px 55px 17px 17px; background: #181216; box-shadow: 0 18px 52px rgba(0,0,0,.4), 0 0 28px rgba(212,160,167,.08); }
 .party-person__portrait img { transition: transform .5s cubic-bezier(.22,1,.36,1), filter .35s ease; }
 .party-person--left .party-person__portrait img { transform: scale(1.32); }
@@ -161,7 +163,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-
 .party-person--left .party-person__look { right: 7px; }.party-person--right .party-person__look { left: 7px; }
 .party-person__look span { width: 5px; height: 5px; border-radius: 50%; background: var(--rose); }
 .party-person strong { margin-top: 12px; color: var(--muted); font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; }
-.gaze-line { position: absolute; z-index: 1; left: 30%; right: 30%; top: 45%; border-top: 1px dashed rgba(212,160,167,.43); }
+.gaze-line { position: absolute; z-index: 1; left: 30%; right: 30%; top: 45%; border-top: 1px dashed rgba(212,160,167,.43); transition: left .7s cubic-bezier(.22,1,.36,1), right .7s cubic-bezier(.22,1,.36,1); }.party-scene.is-connected .gaze-line { left: 37%; right: 37%; border-top-style: solid; }
 .gaze-line::before, .gaze-line::after { content: ""; position: absolute; top: -3px; width: 5px; height: 5px; border-radius: 50%; background: var(--rose); box-shadow: 0 0 14px var(--rose); }
 .gaze-line::before { left: 0; }.gaze-line::after { right: 0; }
 .gaze-line span { position: absolute; left: 50%; top: -23px; translate: -50%; width: max-content; color: #80757b; font-size: .58rem; letter-spacing: .14em; text-transform: uppercase; }
@@ -319,7 +321,7 @@ button.photo-frame:hover .photo-frame__image img { transform: scale(1.025); }
 @media (min-width: 700px) {
   .section-shell { width: min(100% - 80px, 1120px); }.story-section { padding: 145px 0; }
   .hero-intro__lines { min-height: 305px; }.hero-intro__lines p { margin: 10px 0; }
-  .party-scene { min-height: 500px; padding-inline: 12%; }.party-person { width: 175px; }.party-person__portrait { width: 166px; border-radius: 82px 82px 20px 20px; }.gaze-line { left: 28%; right: 28%; top: 43%; }
+  .party-scene { min-height: 500px; padding-inline: 12%; }.party-person { width: 175px; }.party-person__portrait { width: 166px; border-radius: 82px 82px 20px 20px; }.gaze-line { left: 28%; right: 28%; top: 43%; }.party-scene.is-connected .party-person--left { transform: translate(140px, 0) rotate(2deg) scale(1.04); }.party-scene.is-connected .party-person--right { transform: translate(-140px, 0) rotate(-2deg) scale(1.04); }.party-scene.is-connected .gaze-line { left: 42%; right: 42%; }
   .story-beat { grid-template-columns: 65px 1fr; padding: 29px 0; }.choice-game { padding: 38px; }
   .kiss-reveal { grid-template-columns: 1.05fr .8fr; gap: 70px; }.kiss-reveal__photo { margin: 0; }
   .achievement-card { grid-template-columns: auto 1fr auto; padding: 27px 30px; }.achievement-card__xp { grid-column: 3; grid-row: 1; align-self: center; }
