@@ -1,0 +1,18 @@
+node_modules
+.next
+out
+coverage
+*.log
+*.tsbuildinfo
+.env*
+!.env.example
+.DS_Store
+
+# Arquivos brutos locais; o site usa as cópias normalizadas em public/photos e public/audio.
+public/WhatsApp Image*.jpeg
+public/solo iasmim.jpeg
+public/solo willy.jpeg
+public/musica do bar.mp3
+public/musica do bara.mp3
+public/audio/musica-bar.mp3
+public/audio/musica-bar-v2.mp3
